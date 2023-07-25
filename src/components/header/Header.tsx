@@ -144,6 +144,7 @@ export default function Header() {
 					<div className={classes.hiddenSm}>
 						<HeaderNav />
 					</div>
+					{/* TODO: Search autocomplete and search result to include image and link to show */}
 					<Autocomplete
 						placeholder='Search'
 						size='xs'

@@ -88,18 +88,17 @@ export default function Watchlist() {
 				<Card
 					key={show.id}
 					shadow='md'
-					padding={'xs'}
-					pb={'md'}
+					padding={0}
 					style={{ color: 'inherit', backgroundColor: 'inherit' }}
 					mb={'sm'}
 				>
-					<Grid>
-						<Grid.Col span={12}>
+					<Grid m={0}>
+						<Grid.Col span={12} p={0}>
 							<Card.Section>
 								<Image src={show.imagePath} />
 							</Card.Section>
 						</Grid.Col>
-						<Grid.Col span={12}>
+						<Grid.Col span={12} px={'xs'} pb={'md'}>
 							<Title size={'h3'} style={{ lineHeight: 1.2 }} mb={rem(4)}>
 								{show.title}
 							</Title>
@@ -111,11 +110,9 @@ export default function Watchlist() {
 										showId={show.id}
 									/>
 								</Grid.Col>
-								{/* <Flex align={'flex-end'} justify={'space-between'} gap={rem(10)}> */}
 								<Grid.Col span={6}>
 									<Subheadings>Episodes</Subheadings>
 									<NumberInput
-										// label='Episodes'
 										placeholder='Episodes watched'
 										value={watchlistShows[show.id].episodeWatched}
 										onChange={(episode: number) => {
@@ -147,7 +144,6 @@ export default function Watchlist() {
 									</Button>
 								</Grid.Col>
 							</Grid>
-							{/* </Flex> */}
 						</Grid.Col>
 					</Grid>
 				</Card>
