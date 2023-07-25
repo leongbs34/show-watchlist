@@ -1,122 +1,184 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { useState } from 'react';
+import {
+	createStyles,
+	Autocomplete,
+	Group,
+	Burger,
+	rem,
+	Transition,
+	Paper,
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { SearchOutlined } from '@mui/icons-material';
+import HeaderNav from './header-nav/HeaderNav';
+import ThemeToggleBtn from '../theme-toggle-btn/ThemeToggleBtn';
 import { Link } from 'react-router-dom';
+import { useAppDispatch } from '../../redux/hooks';
+import { changeActiveNav } from '../../redux/slices/activeNavSlice';
 
-import styles from './Header.module.css';
+const useStyles = createStyles(theme => ({
+	header: {
+		paddingInline: theme.spacing.xs,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? theme.colors.dark[7] : 'inherit',
+		boxShadow: theme.colorScheme === 'dark' ? 'none' : theme.shadows.sm,
+		position: 'relative',
+		marginBottom: theme.spacing.lg,
+	},
+
+	brand: {
+		width: rem(39),
+
+		[theme.fn.largerThan('sm')]: {
+			marginRight: 'auto',
+		},
+	},
+
+	brand__img: {
+		width: '100%',
+		height: '100%',
+		borderRadius: '50%',
+	},
+
+	inner: {
+		padding: theme.spacing.xs,
+		justifyContent: 'space-between',
+		display: 'flex',
+		alignItems: 'center',
+	},
+
+	dropdown: {
+		position: 'absolute',
+		translate: '0 100%',
+		bottom: 0,
+		left: 0,
+		right: 0,
+		zIndex: 1,
+		borderTopRightRadius: 0,
+		borderTopLeftRadius: 0,
+		borderTopWidth: 0,
+		overflow: 'hidden',
+
+		[theme.fn.largerThan('sm')]: {
+			display: 'none',
+		},
+
+		[`& > *`]: {
+			'display': 'block',
+			'lineHeight': 1,
+			'padding': `${rem(8)} ${rem(12)}`,
+			'borderRadius': theme.radius.sm,
+			'textDecoration': 'none',
+			'color':
+				theme.colorScheme === 'dark'
+					? theme.colors.dark[0]
+					: theme.colors.gray[7],
+			'fontSize': theme.fontSizes.sm,
+			'fontWeight': 500,
+
+			'&:hover': {
+				backgroundColor:
+					theme.colorScheme === 'dark'
+						? theme.colors.dark[6]
+						: theme.colors.gray[0],
+			},
+
+			[theme.fn.smallerThan('sm')]: {
+				borderRadius: 0,
+				padding: `${theme.spacing.xs} ${theme.spacing.md}`,
+			},
+
+			'&:not(:first-of-type)': {
+				padding: 0,
+			},
+		},
+	},
+
+	burger: {
+		[theme.fn.largerThan('sm')]: {
+			display: 'none',
+		},
+	},
+
+	hiddenSm: {
+		[theme.fn.smallerThan('sm')]: {
+			display: 'none',
+		},
+	},
+
+	linkActive: {
+		'&, &:hover': {
+			backgroundColor: theme.fn.variant({
+				variant: 'light',
+				color: theme.primaryColor,
+			}).background,
+			color: theme.fn.variant({ variant: 'light', color: theme.primaryColor })
+				.color,
+		},
+	},
+}));
 
 export default function Header() {
-	const [isOpen, setOpen] = useState(false);
-
-	const handleClick = () => {
-		setOpen(open => !open);
-	};
-
-	const handleNavbarClick = () => {
-		setOpen(false);
-	};
+	const [opened, { toggle }] = useDisclosure(false);
+	const dispatch = useAppDispatch();
+	const { classes } = useStyles();
 
 	return (
-		<header className={styles.header}>
-			<section className={styles.navbar}>
-				<div className={styles.brand}>
-					<span>Brand</span>
-				</div>
-				<nav>
-					<button type='button' className={styles.btn} onClick={handleClick}>
-						<svg
-							xmlns='http://www.w3.org/2000/svg'
-							fill='none'
-							viewBox='0 0 24 24'
-							strokeWidth={1.5}
-							stroke='currentColor'
-							className={`w-6 h-6 ${styles['bars-icon']}`}
-						>
-							<path
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								d='M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5'
-							/>
-						</svg>
-					</button>
-				</nav>
-			</section>
-			<nav
-				className={`${styles['navbar-accordion']} ${
-					isOpen && styles['navbar-accordion--open']
-				}`}
-			>
-				<ul className={styles['navbar-list']}>
-					<li>
-						<a
-							href='#'
-							className={styles['navbar-links']}
-							onClick={handleNavbarClick}
-						>
-							<svg
-								xmlns='http://www.w3.org/2000/svg'
-								fill='none'
-								viewBox='0 0 24 24'
-								strokeWidth={1.5}
-								stroke='currentColor'
-								className={`w-6 h-6 ${styles['navbar-links-icon']}`}
-							>
-								<path
-									strokeLinecap='round'
-									strokeLinejoin='round'
-									d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
-								/>
-							</svg>
-							Cart
-						</a>
-					</li>
-					<li>
-						<a
-							href='#'
-							className={styles['navbar-links']}
-							onClick={handleNavbarClick}
-						>
-							<svg
-								xmlns='http://www.w3.org/2000/svg'
-								fill='none'
-								viewBox='0 0 24 24'
-								strokeWidth={1.5}
-								stroke='currentColor'
-								className={`w-6 h-6 ${styles['navbar-links-icon']}`}
-							>
-								<path
-									strokeLinecap='round'
-									strokeLinejoin='round'
-									d='M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9'
-								/>
-							</svg>
-							Login
-						</a>
-					</li>
-					<li>
-						<a
-							href='#'
-							className={styles['navbar-links']}
-							onClick={handleNavbarClick}
-						>
-							<svg
-								xmlns='http://www.w3.org/2000/svg'
-								fill='none'
-								viewBox='0 0 24 24'
-								strokeWidth={1.5}
-								stroke='currentColor'
-								className={`w-6 h-6 ${styles['navbar-links-icon']}`}
-							>
-								<path
-									strokeLinecap='round'
-									strokeLinejoin='round'
-									d='M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10'
-								/>
-							</svg>
-							Signup
-						</a>
-					</li>
-				</ul>
-			</nav>
+		<header className={classes.header}>
+			<div className={classes.inner}>
+				<Group className={classes.brand}>
+					<Link
+						to={'/'}
+						onClick={() => {
+							dispatch(changeActiveNav(''));
+						}}
+					>
+						<img
+							src='/src/assets/brand-logo.jpg'
+							alt='Brand Logo'
+							className={classes['brand__img']}
+						/>
+					</Link>
+				</Group>
+
+				<Group spacing={5}>
+					<div className={classes.hiddenSm}>
+						<HeaderNav />
+					</div>
+					<Autocomplete
+						placeholder='Search'
+						size='xs'
+						icon={<SearchOutlined />}
+						data={[
+							'React',
+							'Angular',
+							'Vue',
+							'Next.js',
+							'Riot.js',
+							'Svelte',
+							'Blitz.js',
+						]}
+					/>
+					<div className={classes.hiddenSm}>
+						<ThemeToggleBtn size='lg' />
+					</div>
+				</Group>
+
+				<Burger
+					opened={opened}
+					onClick={toggle}
+					className={classes.burger}
+					size='sm'
+				/>
+
+				<Transition transition='pop-top-right' duration={100} mounted={opened}>
+					{styles => (
+						<Paper className={classes.dropdown} withBorder style={styles}>
+							<ThemeToggleBtn size='lg' />
+							<HeaderNav toggleMenu={toggle} />
+						</Paper>
+					)}
+				</Transition>
+			</div>
 		</header>
 	);
 }

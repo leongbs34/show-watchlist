@@ -1,35 +1,5 @@
-/* 
-
-COLORS:
-- Primary: #f03e3e
-- Tints:
-- Shades:
-- Accent:
-- Grey: 
-*/
-
 :root {
-	--blue--50: #e7f5ff;
-	--blue--100: #d0ebff;
-	--blue--200: #a5d8ff;
-	--blue--300: #74c0fc;
-	--blue--400: #4dabf7;
-	--blue--500: #339af0;
-	--blue--600: #228be6;
-	--blue--700: #1c7ed6;
-	--blue--800: #1971c2;
-	--blue--900: #1864ab;
-
-	--gray--50: #f8f9fa;
-	--gray--100: #f1f3f5;
-	--gray--200: #e9ecef;
-	--gray--300: #dee2e6;
-	--gray--400: #ced4da;
-	--gray--500: #adb5bd;
-	--gray--600: #868e96;
-	--gray--700: #495057;
-	--gray--800: #343a40;
-	--gray--900: #212529;
+	--number-line-clamp: 1;
 }
 
 *,
@@ -40,20 +10,23 @@ COLORS:
 	padding: 0;
 }
 
-html {
+/* html {
 	font-size: 62.5%;
-}
-
-body {
-	font-size: 1.6rem;
-	font-family: 'Roboto', sans-serif;
-	font-weight: 400;
-	color: var(--gray--100);
-	background-color: var(--gray--600);
-}
+} */
 
 button {
 	background: none;
 	border: none;
 	cursor: pointer;
+}
+
+.line-clamp {
+	display: -webkit-box;
+	-webkit-line-clamp: var(--number-line-clamp);
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.line-clamp--2 {
+	--number-line-clamp: 2;
 }

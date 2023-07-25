@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 
 shopping-cart-design.png
+src/components/featured-items/Carousel*

@@ -1,0 +1,17 @@
+export enum Genre {
+	ALL = 'all',
+	ACTION = 'action',
+	SHOUNEN = 'shounen',
+	ADVENTURE = 'adventure',
+	COMEDY = 'comedy',
+	SLICE_OF_LIve = 'slice of life',
+	DRAMA = 'drama',
+	FANTASY = 'fantasy',
+	SUPERNATURAL = 'supernatural',
+	MAGIC = 'magic',
+	MYSTERY = 'mystery',
+	HORROR = 'horror',
+	PSYCHOLOGICAL = 'psychological',
+	'SCI-FI' = 'sci-fi',
+	ROMANCE = 'romance',
+}
