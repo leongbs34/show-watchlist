@@ -23,6 +23,7 @@ import {
 import Tags from '../../components/tags/Tags';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import styled from '@emotion/styled';
+import Error from '../../components/error/Error';
 
 const Subheadings = styled(Text)<TextProps>`
 	letter-spacing: 0.75px;
@@ -84,6 +85,13 @@ export default function Watchlist() {
 					Watchlist ({shows.length})
 				</Flex>
 			</Title>
+			{shows.length === 0 && (
+				<Error
+					imagePath='/src/assets/totoro_sleeping.png'
+					errorTitle='Your watchlist is empty'
+					errorText="Looks like you haven't made your choice yet..."
+				/>
+			)}
 			{shows.map(show => (
 				<Card
 					key={show.id}

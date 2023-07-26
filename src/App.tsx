@@ -13,7 +13,7 @@ import { Provider } from 'react-redux';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Watchlist from './page/watchlist/Watchlist';
 import Show from './page/show/Show';
-import Error from './page/error/Error';
+import ErrorPage from './page/error/ErrorPage';
 
 export default function App() {
 	const preferredColorScheme = useColorScheme();
@@ -47,7 +47,7 @@ export default function App() {
 		{
 			path: '/',
 			element: <Root />,
-			errorElement: <Error />,
+			errorElement: <ErrorPage />,
 			children: [
 				{
 					index: true,
