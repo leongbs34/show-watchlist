@@ -7,6 +7,7 @@ import {
 	Button,
 	Flex,
 	rem,
+	createStyles,
 } from '@mantine/core';
 import { animes } from '../../data/animeData';
 import styled from '@emotion/styled';
@@ -21,6 +22,7 @@ import {
 	addToWatchlist,
 	removeFromWatchlist,
 } from '../../redux/slices/watchlistSlice';
+import { useNavigate } from 'react-router-dom';
 
 const Grid = styled.div`
 	display: grid;
@@ -32,12 +34,22 @@ const Title = styled(Text)<TextProps>`
 	line-height: 1.2;
 `;
 
+const useStyles = createStyles(() => ({
+	'card-section': {
+		['&:hover']: {
+			cursor: 'pointer',
+		},
+	},
+}));
+
 const GridCol = styled.div``;
 
 export default function AnimeList() {
 	const { currentGenre } = useContext(FilterContext);
 	const watchlistShows = useAppSelector(state => state.watchlist.shows);
 	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
+	const { classes } = useStyles();
 
 	const filteredAnimes = useMemo(
 		() =>
@@ -66,7 +78,12 @@ export default function AnimeList() {
 							padding={'xs'}
 							style={{ color: 'inherit', backgroundColor: 'inherit' }}
 						>
-							<Card.Section>
+							<Card.Section
+								className={classes['card-section']}
+								onClick={() => {
+									navigate(`shows/${anime.id}`);
+								}}
+							>
 								<Image src={anime.imagePath} alt={anime.title} height={160} />
 							</Card.Section>
 							<Title

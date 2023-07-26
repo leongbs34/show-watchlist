@@ -16,11 +16,12 @@ const slides = animes
 	.map(featuredAnime => (
 		<MantineCarousel.Slide key={featuredAnime.id}>
 			<FeaturedCard
-				image={featuredAnime.imagePath}
-				title={featuredAnime.title}
-				genres={featuredAnime.genre}
-				seasons={featuredAnime.seasons}
-				episodes={featuredAnime.episodes}
+				// image={featuredAnime.imagePath}
+				// title={featuredAnime.title}
+				// genres={featuredAnime.genre}
+				// seasons={featuredAnime.seasons}
+				// episodes={featuredAnime.episodes}
+				show={featuredAnime}
 			/>
 		</MantineCarousel.Slide>
 	));

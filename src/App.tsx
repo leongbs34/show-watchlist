@@ -12,7 +12,8 @@ import { store } from './redux/store';
 import { Provider } from 'react-redux';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Watchlist from './page/watchlist/Watchlist';
-import Header from './components/header/Header';
+import Show from './page/show/Show';
+import Error from './page/error/Error';
 
 export default function App() {
 	const preferredColorScheme = useColorScheme();
@@ -46,12 +47,7 @@ export default function App() {
 		{
 			path: '/',
 			element: <Root />,
-			errorElement: (
-				<>
-					<Header />
-					<div>Error page should be here</div>
-				</>
-			),
+			errorElement: <Error />,
 			children: [
 				{
 					index: true,
@@ -60,7 +56,10 @@ export default function App() {
 				{
 					path: 'watchlist',
 					element: <Watchlist />,
-					errorElement: <div>Error page should be here</div>,
+				},
+				{
+					path: 'shows/:showId',
+					element: <Show />,
 				},
 			],
 		},

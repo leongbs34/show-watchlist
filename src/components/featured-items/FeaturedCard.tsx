@@ -8,16 +8,13 @@ import {
 	rem,
 	useMantineTheme,
 } from '@mantine/core';
-import { Genre } from '../model/Genre.model';
 import styled from '@emotion/styled';
 import Tags from '../tags/Tags';
+import { useNavigate } from 'react-router-dom';
+import Anime from '../model/Anime.model';
 
 interface FeaturedCardProps {
-	image: string;
-	title: string;
-	genres: Genre[];
-	episodes: number;
-	seasons: number;
+	show: Anime;
 }
 
 const Background = styled(Paper)<PaperProps>`
@@ -57,6 +54,10 @@ const CardTitle = styled(Title)`
 	line-height: 1.1;
 	font-size: ${rem(32)};
 	margin-bottom: ${({ theme }) => theme.spacing.sm};
+
+	&:hover {
+		cursor: pointer;
+	}
 `;
 
 const ShowDetails = styled(Flex)`
@@ -72,20 +73,23 @@ const ShowDetailsText = styled(Text)<TextProps>`
 		theme.colorScheme === 'dark' ? '' : theme.colors.gray[4]};
 `;
 
-export default function FeaturedCard({
-	image,
-	title,
-	genres,
-	seasons,
-	episodes,
-}: FeaturedCardProps) {
+export default function FeaturedCard({ show }: FeaturedCardProps) {
 	const theme = useMantineTheme();
+	const navigate = useNavigate();
+	const {
+		id: showId,
+		imagePath,
+		seasons,
+		episodes,
+		title,
+		genre: genres,
+	} = show;
 
 	return (
 		<Background
 			shadow='md'
 			radius='xs'
-			sx={{ backgroundImage: `url(${image})` }}
+			sx={{ backgroundImage: `url(${imagePath})` }}
 		>
 			<CardDetails>
 				<ShowDetails>
@@ -96,7 +100,14 @@ export default function FeaturedCard({
 						{episodes} {episodes === 1 ? 'episode' : 'episodes'}
 					</ShowDetailsText>
 				</ShowDetails>
-				<CardTitle order={3} lineClamp={2} transform='capitalize'>
+				<CardTitle
+					order={3}
+					lineClamp={2}
+					transform='capitalize'
+					onClick={() => {
+						navigate(`shows/${showId}`);
+					}}
+				>
 					{title}
 				</CardTitle>
 				<Tags genres={genres} mb={theme.spacing.md} />
