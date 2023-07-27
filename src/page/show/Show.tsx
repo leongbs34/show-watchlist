@@ -5,7 +5,6 @@ import {
 	Card,
 	Container,
 	Flex,
-	Image,
 	Spoiler,
 	createStyles,
 	rem,
@@ -90,7 +89,6 @@ export default function Show() {
 	const dispatch = useAppDispatch();
 	const watchlistShows = useAppSelector(state => state.watchlist.shows);
 	const theme = useMantineTheme();
-	const largerThanSm = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`);
 	const largerThanMd = useMediaQuery(`(min-width: ${theme.breakpoints.md})`);
 	const largerThanLg = useMediaQuery(`(min-width: ${theme.breakpoints.lg})`);
 
