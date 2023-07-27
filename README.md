@@ -1,6 +1,6 @@
 # show-watchlist
 
-Check it out [here](https://show-watchlist-seven.vercel.app/)
+**Check it out [here](https://show-watchlist-seven.vercel.app/)**
 
 # Created using React and deployed on Vercel
 -  Application that allows users to view details of shows and allow them to watchlist those shows. 
