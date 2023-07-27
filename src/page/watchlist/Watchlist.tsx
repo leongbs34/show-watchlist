@@ -143,7 +143,7 @@ export default function Watchlist() {
 			.then(value => {
 				// This code runs once the value has been loaded
 				// from the offline store.
-				dispatch(setWatchlist(value as showsType));
+				if (value != null) dispatch(setWatchlist(value as showsType));
 			})
 			.catch(err => {
 				// This code runs if there were any errors
