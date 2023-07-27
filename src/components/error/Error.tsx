@@ -7,19 +7,18 @@ import {
 	Container,
 	Group,
 	rem,
-	Image,
 } from '@mantine/core';
 import { PropsWithChildren } from 'react';
 import { changeActiveNav } from '../../redux/slices/activeNavSlice';
 import { useAppDispatch } from '../../redux/hooks';
 
 const useStyles = createStyles(theme => ({
-	root: {
+	'root': {
 		paddingTop: rem(80),
 		paddingBottom: rem(120),
 	},
 
-	title: {
+	'title': {
 		fontFamily: `Greycliff CF, ${theme.fontFamily}`,
 		textAlign: 'center',
 		fontWeight: 900,
@@ -31,12 +30,22 @@ const useStyles = createStyles(theme => ({
 		},
 	},
 
-	description: {
+	'description': {
 		maxWidth: rem(540),
 		margin: 'auto',
 		marginTop: theme.spacing.xl,
 		marginBottom: `calc(${theme.spacing.xl} * 1.5)`,
 		color: theme.colors.gray[6],
+	},
+
+	'image-container': {
+		width: rem(240),
+		marginInline: 'auto',
+		marginBottom: rem(25),
+	},
+	'image': {
+		width: '100%',
+		height: '100%',
 	},
 }));
 
@@ -54,11 +63,18 @@ export default function Error({
 }: ErrorProps) {
 	const { classes } = useStyles();
 	const dispatch = useAppDispatch();
+	const imagePathWebp = imagePath.replace(/\.\w+$/, '.webp');
 
 	return (
 		<div className={classes.root}>
 			<Container>
-				<Image src={imagePath} width={rem(240)} mx={'auto'} mb={rem(25)} />
+				<div className={classes['image-container']}>
+					<picture>
+						<source srcSet={imagePathWebp} type='image/webp' />
+						<source srcSet={imagePath} type='image/png' />
+						<img src={imagePath} alt='Error image' className={classes.image} />
+					</picture>
+				</div>
 				{children}
 				<Title className={classes.title}>{errorTitle}</Title>
 				<Text size='lg' align='center' className={classes.description}>

@@ -223,11 +223,15 @@ export default function Header() {
 							dispatch(changeActiveNav('/'));
 						}}
 					>
-						<img
-							src='/src/assets/brand-logo.jpg'
-							alt='Brand Logo'
-							className={classes['brand__img']}
-						/>
+						<picture>
+							<source srcSet='/src/assets/brand-logo.webp' type='image/webp' />
+							<source srcSet='/src/assets/brand-logo.png' type='image/png' />
+							<img
+								srcSet='/src/assets/brand-logo.png'
+								alt='Brand Logo'
+								className={classes['brand__img']}
+							/>
+						</picture>
 					</Link>
 				</Group>
 
