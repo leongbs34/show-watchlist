@@ -1,54 +1,50 @@
 import {
 	Card,
-	Image,
 	Text,
 	Container,
 	TextProps,
-	Button,
-	Flex,
 	rem,
 	createStyles,
+	Grid,
 } from '@mantine/core';
 import { animes } from '../../data/animeData';
 import styled from '@emotion/styled';
 import Tags from '../tags/Tags';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
+
 import { useContext, useMemo } from 'react';
 import FilterContext from '../../context/FilterContext';
 import { Genre } from '../model/Genre.model';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import {
-	addToWatchlist,
-	removeFromWatchlist,
-} from '../../redux/slices/watchlistSlice';
-import { useNavigate } from 'react-router-dom';
-
-const Grid = styled.div`
-	display: grid;
-	grid-template-columns: 1fr;
-	row-gap: ${({ theme }) => theme.spacing.xl};
-`;
+import useAppNavigate from '../../hooks/useAppNavigate';
 
 const Title = styled(Text)<TextProps>`
 	line-height: 1.2;
 `;
 
-const useStyles = createStyles(() => ({
+const useStyles = createStyles(theme => ({
 	'card-section': {
 		['&:hover']: {
 			cursor: 'pointer',
 		},
+
+		[theme.fn.largerThan('sm')]: {
+			height: rem(320),
+		},
+
+		[theme.fn.largerThan('lg')]: {
+			height: rem(500),
+		},
+	},
+
+	'image': {
+		height: '100%',
+		width: '100%',
+		objectFit: 'cover',
 	},
 }));
 
-const GridCol = styled.div``;
-
 export default function AnimeList() {
 	const { currentGenre } = useContext(FilterContext);
-	const watchlistShows = useAppSelector(state => state.watchlist.shows);
-	const dispatch = useAppDispatch();
-	const navigate = useNavigate();
+	const handleAppNavigate = useAppNavigate();
 	const { classes } = useStyles();
 
 	const filteredAnimes = useMemo(
@@ -59,20 +55,11 @@ export default function AnimeList() {
 		[currentGenre]
 	);
 
-	const isWatchlisted = (id: string) => id in watchlistShows;
-
-	const handleAddToWatchlist = (id: string) => {
-		dispatch(addToWatchlist(id));
-	};
-	const handleRemoveFromWatchlist = (id: string) => {
-		dispatch(removeFromWatchlist(id));
-	};
-
 	return (
-		<Container mb={'lg'}>
+		<Container mb={'lg'} fluid>
 			<Grid>
 				{filteredAnimes.map(anime => (
-					<GridCol key={anime.id}>
+					<Grid.Col key={anime.id} mb={'md'} sm={6} md={4} lg={3}>
 						<Card
 							shadow='md'
 							padding={'xs'}
@@ -81,10 +68,14 @@ export default function AnimeList() {
 							<Card.Section
 								className={classes['card-section']}
 								onClick={() => {
-									navigate(`shows/${anime.id}`);
+									handleAppNavigate('shows', anime.id);
 								}}
 							>
-								<Image src={anime.imagePath} alt={anime.title} height={160} />
+								<img
+									src={anime.imagePath}
+									alt={anime.title}
+									className={classes.image}
+								/>
 							</Card.Section>
 							<Title
 								weight={700}
@@ -96,34 +87,8 @@ export default function AnimeList() {
 								{anime.title}
 							</Title>
 							<Tags genres={anime.genre} />
-							<Button
-								variant='light'
-								color={isWatchlisted(anime.id) ? 'red' : 'blue'}
-								fullWidth
-								radius='md'
-								mt={'md'}
-								onClick={() => {
-									if (isWatchlisted(anime.id))
-										handleRemoveFromWatchlist(anime.id);
-									else handleAddToWatchlist(anime.id);
-								}}
-							>
-								<Flex gap={rem(8)} align='center'>
-									{isWatchlisted(anime.id) ? (
-										<>
-											<HeartBrokenIcon />
-											<span>Remove from watchlist</span>
-										</>
-									) : (
-										<>
-											<FavoriteIcon />
-											<span>Add to watchlist</span>
-										</>
-									)}
-								</Flex>
-							</Button>
 						</Card>
-					</GridCol>
+					</Grid.Col>
 				))}
 			</Grid>
 		</Container>

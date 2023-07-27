@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import { NavLink } from '@mantine/core';
-import BookmarksIcon from '@mui/icons-material/Bookmarks';
+import BookmarksOutlinedIcon from '@mui/icons-material/BookmarksOutlined';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { changeActiveNav } from '../../../redux/slices/activeNavSlice';
@@ -8,20 +10,24 @@ import { changeActiveNav } from '../../../redux/slices/activeNavSlice';
 const NavItem = styled.div`
 	display: flex;
 	align-items: center;
-	font-size: rem(16);
 	gap: ${({ theme }) => theme.spacing.xs};
 `;
 
 const links = [
 	{
-		icon: BookmarksIcon,
+		icon: HomeOutlinedIcon,
+		href: '/',
+		label: 'Home',
+	},
+	{
+		icon: BookmarksOutlinedIcon,
 		href: 'watchlist',
 		label: 'Watchlist',
 	},
 	{
-		icon: BookmarksIcon,
-		href: 'test',
-		label: 'Test',
+		icon: ErrorOutlineOutlinedIcon,
+		href: 'error',
+		label: 'Error',
 	},
 ];
 

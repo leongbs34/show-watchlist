@@ -8,9 +8,10 @@ import {
 	NumberInput,
 	Rating,
 	Text,
-	TextProps,
 	Title,
+	createStyles,
 	rem,
+	useMantineTheme,
 } from '@mantine/core';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { animes } from '../../data/animeData';
@@ -21,16 +22,77 @@ import {
 	removeFromWatchlist,
 } from '../../redux/slices/watchlistSlice';
 import Tags from '../../components/tags/Tags';
-import BookmarksIcon from '@mui/icons-material/Bookmarks';
-import styled from '@emotion/styled';
+import BookmarksOutlinedIcon from '@mui/icons-material/BookmarksOutlined';
 import Error from '../../components/error/Error';
+import useAppNavigate from '../../hooks/useAppNavigate';
+import { useMediaQuery } from '@mantine/hooks';
 
-const Subheadings = styled(Text)<TextProps>`
-	letter-spacing: 0.75px;
-	text-transform: uppercase;
-	font-weight: 700;
-	font-size: ${({ theme }) => theme.fontSizes.xs};
-`;
+const useStyles = createStyles(theme => ({
+	'watchlist-header': {
+		[theme.fn.largerThan('md')]: {
+			fontSize: rem(40),
+			marginBottom: theme.spacing.xl,
+		},
+	},
+
+	'watchlist-item': {
+		color: 'inherit',
+		backgroundColor: 'inherit',
+		marginBottom: rem(20),
+
+		[theme.fn.largerThan('sm')]: {
+			marginBottom: rem(25),
+		},
+
+		[theme.fn.largerThan('lg')]: {
+			marginBottom: rem(31.25),
+		},
+	},
+
+	'show-title': {
+		lineHeight: 1.2,
+
+		[theme.fn.largerThan('md')]: {
+			fontSize: rem(25),
+		},
+
+		[theme.fn.largerThan('lg')]: {
+			fontSize: rem(31.25),
+		},
+	},
+
+	'subheadings': {
+		letterSpacing: '0.75px',
+		textTransform: 'uppercase',
+		fontWeight: 700,
+		fontSize: theme.fontSizes.xs,
+
+		[theme.fn.largerThan('sm')]: {
+			fontSize: theme.fontSizes.sm,
+		},
+		[theme.fn.largerThan('md')]: {
+			fontSize: rem(14),
+		},
+		[theme.fn.largerThan('lg')]: {
+			fontSize: theme.fontSizes.lg,
+		},
+	},
+
+	'ratings': {
+		'& > svg': {
+			[theme.fn.largerThan('md')]: {
+				width: '1.75rem',
+				height: '1.75rem',
+			},
+		},
+	},
+
+	'image': {
+		'&:hover': {
+			cursor: 'pointer',
+		},
+	},
+}));
 
 function Ratings({
 	ratingsValue,
@@ -40,6 +102,7 @@ function Ratings({
 	showId: string;
 }) {
 	const dispatch = useAppDispatch();
+	const { classes } = useStyles();
 
 	const setRatings = (ratings: number, showId: string) => {
 		dispatch(changeRatings({ ratings, id: showId }));
@@ -47,7 +110,7 @@ function Ratings({
 
 	return (
 		<div>
-			<Subheadings>Ratings</Subheadings>
+			<Text className={classes.subheadings}>Ratings</Text>
 			<Rating
 				defaultValue={0}
 				value={ratingsValue}
@@ -55,6 +118,7 @@ function Ratings({
 				onChange={ratings => {
 					setRatings(ratings, showId);
 				}}
+				classNames={{ symbolBody: classes.ratings }}
 			/>
 		</div>
 	);
@@ -63,6 +127,12 @@ function Ratings({
 export default function Watchlist() {
 	const watchlistShows = useAppSelector(state => state.watchlist.shows);
 	const dispatch = useAppDispatch();
+	const handleAppNavigate = useAppNavigate();
+	const { classes } = useStyles();
+	const theme = useMantineTheme();
+	const largerThanSm = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`);
+	const largerThanMd = useMediaQuery(`(min-width: ${theme.breakpoints.md})`);
+	const largerThanLg = useMediaQuery(`(min-width: ${theme.breakpoints.lg})`);
 
 	const shows = useMemo(
 		() => animes.filter(anime => anime.id in watchlistShows),
@@ -78,10 +148,10 @@ export default function Watchlist() {
 	};
 
 	return (
-		<Container>
-			<Title order={2} mb={'md'}>
+		<Container size={largerThanLg ? rem(1600) : largerThanMd ? rem(1140) : ''}>
+			<Title order={2} mb={'md'} className={classes['watchlist-header']}>
 				<Flex align={'center'} gap={rem(8)}>
-					<BookmarksIcon />
+					<BookmarksOutlinedIcon fontSize='inherit' />
 					Watchlist ({shows.length})
 				</Flex>
 			</Title>
@@ -97,17 +167,28 @@ export default function Watchlist() {
 					key={show.id}
 					shadow='md'
 					padding={0}
-					style={{ color: 'inherit', backgroundColor: 'inherit' }}
-					mb={'sm'}
+					className={classes['watchlist-item']}
 				>
 					<Grid m={0}>
-						<Grid.Col span={12} p={0}>
-							<Card.Section>
-								<Image src={show.imagePath} />
+						<Grid.Col
+							span={12}
+							sm={6}
+							p={0}
+							onClick={() => {
+								handleAppNavigate('/shows', show.id);
+							}}
+						>
+							<Card.Section className={classes.image}>
+								<Image src={show.imagePath} height={largerThanMd ? 300 : 240} />
 							</Card.Section>
 						</Grid.Col>
-						<Grid.Col span={12} px={'xs'} pb={'md'}>
-							<Title size={'h3'} style={{ lineHeight: 1.2 }} mb={rem(4)}>
+						<Grid.Col
+							span={12}
+							px={largerThanLg ? 'lg' : largerThanMd ? 'md' : 'xs'}
+							pb={'md'}
+							sm={6}
+						>
+							<Title size={'h3'} mb={rem(4)} className={classes['show-title']}>
 								{show.title}
 							</Title>
 							<Tags genres={show.genre} mb={rem(16)} />
@@ -119,7 +200,7 @@ export default function Watchlist() {
 									/>
 								</Grid.Col>
 								<Grid.Col span={6}>
-									<Subheadings>Episodes</Subheadings>
+									<Text className={classes.subheadings}>Episodes</Text>
 									<NumberInput
 										placeholder='Episodes watched'
 										value={watchlistShows[show.id].episodeWatched}
@@ -137,6 +218,7 @@ export default function Watchlist() {
 										}
 										max={show.episodes}
 										min={0}
+										size={largerThanLg ? 'lg' : largerThanSm ? 'md' : 'sm'}
 									/>
 								</Grid.Col>
 								<Grid.Col
@@ -147,6 +229,7 @@ export default function Watchlist() {
 										variant='outline'
 										color='red'
 										onClick={() => onRemove(show.id)}
+										size={largerThanLg ? 'lg' : largerThanSm ? 'md' : 'sm'}
 									>
 										Remove
 									</Button>

@@ -3,7 +3,9 @@ import { Genre } from '../model/Genre.model';
 import styled from '@emotion/styled';
 import { useMemo } from 'react';
 
-export default function Tags({ genres, mb }: { genres: Genre[]; mb?: string }) {
+type TagsProps = { genres: Genre[]; mb?: string };
+
+export default function Tags({ genres, mb }: TagsProps) {
 	const Genres = useMemo(
 		() => styled(Flex)<FlexProps>`
 			column-gap: ${({ theme }) => theme.spacing.xs};

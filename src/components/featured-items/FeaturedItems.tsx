@@ -1,13 +1,7 @@
-import { Progress, Title, rem } from '@mantine/core';
+import { Progress, createStyles, rem } from '@mantine/core';
 import { Carousel as MantineCarousel, Embla } from '@mantine/carousel';
-import styled from '@emotion/styled';
 import { animes } from '../../data/animeData';
-import {
-	CarouselActionType,
-	carouselReducer,
-	initialState,
-} from './carouselReducer';
-import { useCallback, useEffect, useReducer, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import emblaCarouselAutoplay from 'embla-carousel-autoplay';
 import FeaturedCard from './FeaturedCard';
 
@@ -15,62 +9,51 @@ const slides = animes
 	.filter(anime => anime.featured)
 	.map(featuredAnime => (
 		<MantineCarousel.Slide key={featuredAnime.id}>
-			<FeaturedCard
-				// image={featuredAnime.imagePath}
-				// title={featuredAnime.title}
-				// genres={featuredAnime.genre}
-				// seasons={featuredAnime.seasons}
-				// episodes={featuredAnime.episodes}
-				show={featuredAnime}
-			/>
+			<FeaturedCard show={featuredAnime} />
 		</MantineCarousel.Slide>
 	));
 
-const FeaturedItemsHeader = styled(Title)`
-	letter-spacing: ${rem(1.5)};
-	line-height: 1;
-	font-size: ${rem(16)};
-	margin-bottom: ${rem(8.19)};
-	margin-inline: ${({ theme }) => theme.spacing.xs};
-`;
+const useStyles = createStyles(theme => ({
+	header: {
+		letterSpacing: rem(1.5),
+		lineHeight: 1,
+		fontSize: rem(16),
+		marginBottom: rem(8.19),
+		marginInline: theme.spacing.xs,
+		textTransform: 'uppercase',
 
-const Section = styled('section')`
-	margin-bottom: ${({ theme }) => theme.spacing.lg};
-`;
+		[theme.fn.largerThan('lg')]: {
+			fontSize: rem(20),
+		},
+	},
+
+	section: {
+		marginBottom: theme.spacing.lg,
+	},
+}));
 
 export default function FeaturedItems() {
-	const [carouselState, dispatch] = useReducer(carouselReducer, initialState);
 	const autoplay = useRef(emblaCarouselAutoplay({ delay: 5000 }));
-
-	const setScrollProgress = (progress: number) => {
-		dispatch({ type: CarouselActionType.SCROLL, progress: progress * 100 });
-	};
-
-	const setEmbla = (embla: Embla) => {
-		dispatch({ type: CarouselActionType.EMBLA, embla });
-	};
+	const { classes } = useStyles();
+	const [scrollProgress, setScrollProgress] = useState(0);
+	const [embla, setEmbla] = useState<Embla | null>(null);
 
 	const handleScroll = useCallback(() => {
-		if (!carouselState.embla) return;
-		const progress = Math.max(
-			0,
-			Math.min(1, carouselState.embla.scrollProgress())
-		);
-		setScrollProgress(progress);
-	}, [carouselState.embla, setScrollProgress]);
+		if (!embla) return;
+		const progress = Math.max(0, Math.min(1, embla.scrollProgress()));
+		setScrollProgress(progress * 100);
+	}, [embla, setScrollProgress]);
 
 	useEffect(() => {
-		if (carouselState.embla) {
-			carouselState.embla.on('scroll', handleScroll);
+		if (embla) {
+			embla.on('scroll', handleScroll);
 			handleScroll();
 		}
-	}, [carouselState.embla]);
+	}, [embla]);
 
 	return (
-		<Section>
-			<FeaturedItemsHeader order={2} transform='uppercase'>
-				Featured
-			</FeaturedItemsHeader>
+		<section className={classes.section}>
+			<h2 className={classes.header}>Featured</h2>
 			<MantineCarousel
 				loop
 				slideSize='100%'
@@ -83,13 +66,13 @@ export default function FeaturedItems() {
 				{slides}
 			</MantineCarousel>
 			<Progress
-				value={carouselState.scrollProgress}
+				value={scrollProgress}
 				styles={{
 					bar: { transitionDuration: '0ms' },
 				}}
 				size='sm'
 				mx='auto'
 			/>
-		</Section>
+		</section>
 	);
 }

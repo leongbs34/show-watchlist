@@ -1,15 +1,9 @@
-import {
-	Dispatch,
-	PropsWithChildren,
-	SetStateAction,
-	createContext,
-	useState,
-} from 'react';
+import { PropsWithChildren, createContext, useState } from 'react';
 import { Genre } from '../components/model/Genre.model';
 
 interface FilterContextType {
 	currentGenre: Genre;
-	changeCurrentGenre: Dispatch<SetStateAction<Genre>>;
+	changeCurrentGenre: (genre: Genre) => void;
 }
 
 const FilterContext = createContext<FilterContextType>({
@@ -20,9 +14,18 @@ const FilterContext = createContext<FilterContextType>({
 export function FilterProvider({ children }: PropsWithChildren) {
 	const [genre, setGenre] = useState<Genre>(Genre.ALL);
 
+	const changeCurrentGenre = (newGenre: Genre) => {
+		setGenre(prevGenre => {
+			if (prevGenre === newGenre) {
+				return Genre.ALL;
+			}
+			return newGenre;
+		});
+	};
+
 	const providerValue: FilterContextType = {
 		currentGenre: genre,
-		changeCurrentGenre: setGenre,
+		changeCurrentGenre,
 	};
 
 	return (

@@ -10,6 +10,8 @@ import {
 	Image,
 } from '@mantine/core';
 import { PropsWithChildren } from 'react';
+import { changeActiveNav } from '../../redux/slices/activeNavSlice';
+import { useAppDispatch } from '../../redux/hooks';
 
 const useStyles = createStyles(theme => ({
 	root: {
@@ -22,6 +24,7 @@ const useStyles = createStyles(theme => ({
 		textAlign: 'center',
 		fontWeight: 900,
 		fontSize: rem(38),
+		lineHeight: 1.2,
 
 		[theme.fn.smallerThan('sm')]: {
 			fontSize: rem(32),
@@ -50,6 +53,7 @@ export default function Error({
 	children,
 }: ErrorProps) {
 	const { classes } = useStyles();
+	const dispatch = useAppDispatch();
 
 	return (
 		<div className={classes.root}>
@@ -62,7 +66,13 @@ export default function Error({
 				</Text>
 				<Group position='center'>
 					<Button variant='outline' size='md'>
-						<Link to={'/'} style={{ all: 'unset' }}>
+						<Link
+							to={'/'}
+							style={{ all: 'unset' }}
+							onClick={() => {
+								dispatch(changeActiveNav('/'));
+							}}
+						>
 							Go Home
 						</Link>
 					</Button>

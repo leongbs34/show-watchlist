@@ -5,6 +5,8 @@ export default interface Anime {
 	title: string;
 	imagePath: string;
 	description: string;
+	studios: string[];
+	producers: string[];
 	genre: Genre[];
 	seasons: number;
 	episodes: number;

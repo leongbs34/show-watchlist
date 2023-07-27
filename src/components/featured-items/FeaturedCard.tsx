@@ -10,8 +10,8 @@ import {
 } from '@mantine/core';
 import styled from '@emotion/styled';
 import Tags from '../tags/Tags';
-import { useNavigate } from 'react-router-dom';
 import Anime from '../model/Anime.model';
+import useAppNavigate from '../../hooks/useAppNavigate';
 
 interface FeaturedCardProps {
 	show: Anime;
@@ -75,7 +75,7 @@ const ShowDetailsText = styled(Text)<TextProps>`
 
 export default function FeaturedCard({ show }: FeaturedCardProps) {
 	const theme = useMantineTheme();
-	const navigate = useNavigate();
+	const handleAppNavigate = useAppNavigate();
 	const {
 		id: showId,
 		imagePath,
@@ -105,7 +105,7 @@ export default function FeaturedCard({ show }: FeaturedCardProps) {
 					lineClamp={2}
 					transform='capitalize'
 					onClick={() => {
-						navigate(`shows/${showId}`);
+						handleAppNavigate('shows', showId);
 					}}
 				>
 					{title}

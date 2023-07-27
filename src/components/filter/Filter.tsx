@@ -1,15 +1,8 @@
-import { Carousel } from '@mantine/carousel';
+import { MouseEvent, useContext, useRef, useState } from 'react';
+import styles from './Filter.module.css';
+import { Badge, UnstyledButton, UnstyledButtonProps } from '@mantine/core';
 import { Genre } from '../model/Genre.model';
-import {
-	rem,
-	useMantineTheme,
-	Badge,
-	UnstyledButton,
-	UnstyledButtonProps,
-} from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
 import styled from '@emotion/styled';
-import React, { useContext, useMemo } from 'react';
 import FilterContext from '../../context/FilterContext';
 
 type TagButtonProps =
@@ -23,50 +16,124 @@ const TagButton = styled(UnstyledButton)<TagButtonProps>`
 	}
 `;
 
-const MantineCarousel = styled(Carousel)`
-	margin-bottom: ${({ theme }) => theme.spacing.xl};
-
-	.mantine-Carousel-control[data-inactive] {
-		opacity: 0;
-		cursor: 'default';
-	}
-
-	.mantine-Carousel-slide:not(:last-child) {
-		margin-right: ${rem(8)};
-	}
-`;
-
-export default function Filter() {
-	const theme = useMantineTheme();
-	const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
+export default function CarouselCopy() {
+	const [isDragStart, setIsDragStart] = useState(false);
+	const carouselRef = useRef<HTMLDivElement>(null);
+	const [startX, setStartX] = useState(0);
+	const [scrollLeft, setScrollLeft] = useState(0);
+	const navLeftRef = useRef<HTMLButtonElement>(null);
+	const navRightRef = useRef<HTMLButtonElement>(null);
 	const { changeCurrentGenre, currentGenre } = useContext(FilterContext);
 
-	const slides = useMemo(
-		() =>
-			Object.values(Genre).map(genre => (
-				<Carousel.Slide key={genre}>
-					<TagButton
-						onClick={() => {
-							changeCurrentGenre(genre);
-						}}
-					>
-						<Badge variant={genre === currentGenre ? 'filled' : 'light'}>
-							{genre}
-						</Badge>
-					</TagButton>
-				</Carousel.Slide>
-			)),
-		[changeCurrentGenre, currentGenre]
-	);
+	let offsetPos: number;
+
+	const changeFeaturedItem = (direction: 'left' | 'right') => {
+		let clientWidth = carouselRef.current!.clientWidth;
+		clientWidth = direction === 'left' ? -clientWidth : clientWidth;
+
+		carouselRef.current!.scrollBy(clientWidth, 0);
+	};
+
+	const dragStop = () => {
+		setIsDragStart(false);
+	};
+
+	const dragStart = (e: MouseEvent) => {
+		setIsDragStart(true);
+
+		setStartX(e.pageX - carouselRef.current!.offsetLeft);
+
+		setScrollLeft(carouselRef.current!.scrollLeft);
+	};
+
+	const dragging = (e: MouseEvent) => {
+		const mouseOverElementIsImg =
+			(e.target as HTMLElement).classList.value === styles['img-container'];
+		if (mouseOverElementIsImg) {
+			e.preventDefault();
+		}
+
+		if (!isDragStart) return;
+		offsetPos = e.pageX - startX;
+		carouselRef.current!.scrollLeft = scrollLeft - offsetPos;
+	};
 
 	return (
-		<MantineCarousel
-			slideSize='10%'
-			dragFree
-			align='center'
-			slidesToScroll={mobile ? 1 : 2}
-		>
-			{slides}
-		</MantineCarousel>
+		<section className={styles['section-carousel']}>
+			<div className={styles.container}>
+				<div className={styles['carousel']}>
+					<button
+						className={styles['carousel-nav-left']}
+						onClick={() => {
+							changeFeaturedItem('left');
+						}}
+						ref={navLeftRef}
+					>
+						<svg
+							xmlns='http://www.w3.org/2000/svg'
+							fill='none'
+							viewBox='0 0 24 24'
+							strokeWidth={1.5}
+							stroke='currentColor'
+							className={`w-6 h-6 ${styles['carousel-nav-icon']}`}
+						>
+							<path
+								strokeLinecap='round'
+								strokeLinejoin='round'
+								d='M15.75 19.5L8.25 12l7.5-7.5'
+							/>
+						</svg>
+					</button>
+
+					<div
+						className={`${styles['carousel-items']} ${
+							isDragStart && styles.active
+						}`}
+						ref={carouselRef}
+						onMouseDown={dragStart}
+						onMouseMove={dragging}
+						onMouseUp={dragStop}
+						onMouseLeave={dragStop}
+					>
+						{Object.values(Genre).map(genre => (
+							<TagButton
+								key={genre}
+								onClick={() => {
+									changeCurrentGenre(genre);
+								}}
+							>
+								<Badge variant={genre === currentGenre ? 'filled' : 'light'}>
+									{genre}
+								</Badge>
+							</TagButton>
+						))}
+					</div>
+
+					<button
+						className={styles['carousel-nav-right']}
+						onClick={() => {
+							changeFeaturedItem('right');
+						}}
+						ref={navRightRef}
+					>
+						<svg
+							xmlns='http://www.w3.org/2000/svg'
+							fill='none'
+							viewBox='0 0 24 24'
+							strokeWidth={1.5}
+							stroke='currentColor'
+							className={`w-6 h-6 ${styles['carousel-nav-icon']}`}
+						>
+							<path
+								strokeLinecap='round'
+								strokeLinejoin='round'
+								d='M8.25 4.5l7.5 7.5-7.5 7.5'
+							/>
+						</svg>
+					</button>
+					<nav className='carousel-nav'></nav>
+				</div>
+			</div>
+		</section>
 	);
 }
