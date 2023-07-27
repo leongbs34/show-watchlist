@@ -50,29 +50,40 @@ const useStyles = createStyles(theme => ({
 }));
 
 interface ErrorProps extends PropsWithChildren {
-	imagePath: string;
+	imageName: string;
 	errorTitle: string;
 	errorText: string;
 }
 
+function getImageUrl(name: string) {
+	return new URL(`../../assets/${name}.png`, import.meta.url).href;
+}
+
+function getImageUrlWebp(name: string) {
+	return new URL(`../../assets/${name}.webp`, import.meta.url).href;
+}
+
 export default function Error({
-	imagePath,
+	imageName,
 	errorTitle,
 	errorText,
 	children,
 }: ErrorProps) {
 	const { classes } = useStyles();
 	const dispatch = useAppDispatch();
-	const imagePathWebp = imagePath.replace(/\.\w+$/, '.webp');
 
 	return (
 		<div className={classes.root}>
 			<Container>
 				<div className={classes['image-container']}>
 					<picture>
-						<source srcSet={imagePathWebp} type='image/webp' />
-						<source srcSet={imagePath} type='image/png' />
-						<img src={imagePath} alt='Error image' className={classes.image} />
+						<source srcSet={getImageUrlWebp(imageName)} type='image/webp' />
+						<source srcSet={getImageUrl(imageName)} type='image/png' />
+						<img
+							src={getImageUrl(imageName)}
+							alt='Error image'
+							className={classes.image}
+						/>
 					</picture>
 				</div>
 				{children}

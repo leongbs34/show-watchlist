@@ -174,7 +174,7 @@ export default function Watchlist() {
 			</Title>
 			{shows.length === 0 && (
 				<Error
-					imagePath='/src/assets/totoro_sleeping.png'
+					imageName='totoro_sleeping'
 					errorTitle='Your watchlist is empty'
 					errorText="Looks like you haven't made your choice yet..."
 				/>

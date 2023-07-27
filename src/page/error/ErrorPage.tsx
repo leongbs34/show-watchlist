@@ -23,7 +23,7 @@ export default function ErrorPage() {
 		<>
 			<Header />
 			<Error
-				imagePath='/src/assets/saitama_ok.png'
+				imageName='saitama_ok'
 				errorTitle='Page not found'
 				errorText='The page you are looking for does not exist or another error
 					occurred'

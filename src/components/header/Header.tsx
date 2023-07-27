@@ -21,6 +21,8 @@ import { changeActiveNav } from '../../redux/slices/activeNavSlice';
 import { animes } from '../../data/animeData';
 import { forwardRef, useState } from 'react';
 import useAppNavigate from '../../hooks/useAppNavigate';
+import brandLogo from '../../assets/brand-logo.png';
+import brandLogoWebp from '../../assets/brand-logo.webp';
 
 const useStyles = createStyles(theme => ({
 	'header': {
@@ -224,10 +226,10 @@ export default function Header() {
 						}}
 					>
 						<picture>
-							<source srcSet='/src/assets/brand-logo.webp' type='image/webp' />
-							<source srcSet='/src/assets/brand-logo.png' type='image/png' />
+							<source srcSet={brandLogoWebp} type='image/webp' />
+							<source srcSet={brandLogo} type='image/png' />
 							<img
-								srcSet='/src/assets/brand-logo.png'
+								srcSet={brandLogo}
 								alt='Brand Logo'
 								className={classes['brand__img']}
 							/>
