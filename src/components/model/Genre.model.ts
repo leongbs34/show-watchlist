@@ -4,7 +4,7 @@ export enum Genre {
 	SHOUNEN = 'shounen',
 	ADVENTURE = 'adventure',
 	COMEDY = 'comedy',
-	SLICE_OF_LIVE = 'slice of life',
+	SLICE_OF_LIFE = 'slice of life',
 	DRAMA = 'drama',
 	FANTASY = 'fantasy',
 	SUPERNATURAL = 'supernatural',
