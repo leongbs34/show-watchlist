@@ -10,6 +10,7 @@ import {
 	Avatar,
 	Text,
 	SelectItemProps,
+	Flex,
 } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { SearchOutlined } from '@mui/icons-material';
@@ -34,7 +35,7 @@ const useStyles = createStyles(theme => ({
 		marginBottom: theme.spacing.lg,
 	},
 
-	'brand': {
+	'brand__image-container': {
 		width: rem(39),
 		flexShrink: 0,
 
@@ -44,6 +45,28 @@ const useStyles = createStyles(theme => ({
 
 		[theme.fn.largerThan('md')]: {
 			width: rem(48.83),
+		},
+	},
+
+	'brand__heading': {
+		fontSize: rem(20),
+		textTransform: 'uppercase',
+		fontFamily: 'Tajawal, sans-serif',
+		letterSpacing: '1px',
+
+		[theme.fn.largerThan('md')]: {
+			fontSize: rem(25),
+		},
+	},
+
+	'brand__heading-span': {
+		color: theme.colors.blue[7],
+	},
+
+	'link': {
+		'&:visited, &:link': {
+			textDecoration: 'none',
+			color: 'inherit',
 		},
 	},
 
@@ -218,22 +241,32 @@ export default function Header() {
 	return (
 		<header className={classes.header}>
 			<div className={classes.inner}>
-				<Group className={classes.brand}>
+				<Group>
 					<Link
 						to={'/'}
 						onClick={() => {
 							dispatch(changeActiveNav('/'));
 						}}
+						className={classes.link}
 					>
-						<picture>
-							<source srcSet={brandLogoWebp} type='image/webp' />
-							<source srcSet={brandLogo} type='image/png' />
-							<img
-								srcSet={brandLogo}
-								alt='Brand Logo'
-								className={classes['brand__img']}
-							/>
-						</picture>
+						<Flex align={'center'} gap={8}>
+							<div className={classes['brand__image-container']}>
+								<picture>
+									<source srcSet={brandLogoWebp} type='image/webp' />
+									<source srcSet={brandLogo} type='image/png' />
+									<img
+										srcSet={brandLogo}
+										alt='Brand Logo'
+										className={classes['brand__img']}
+									/>
+								</picture>
+							</div>
+							<h2
+								className={`${classes['brand__heading']} ${classes.hiddenSm}`}
+							>
+								<span className={classes['brand__heading-span']}>W</span>anime
+							</h2>
+						</Flex>
 					</Link>
 				</Group>
 
