@@ -15,20 +15,18 @@ import {
 } from '@mantine/core';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { animes } from '../../data/animeData';
-import { useEffect, useMemo } from 'react';
+import { lazy, useMemo } from 'react';
 import {
 	changeEpisodes,
 	changeRatings,
 	removeFromWatchlist,
-	setWatchlist,
-	showsType,
 } from '../../redux/slices/watchlistSlice';
 import Tags from '../../components/tags/Tags';
 import BookmarksOutlinedIcon from '@mui/icons-material/BookmarksOutlined';
-import Error from '../../components/error/Error';
 import useAppNavigate from '../../hooks/useAppNavigate';
 import { useMediaQuery } from '@mantine/hooks';
-import localforage from 'localforage';
+
+const Error = lazy(() => import('../../components/error/Error'));
 
 const useStyles = createStyles(theme => ({
 	'watchlist-header': {
@@ -136,20 +134,6 @@ export default function Watchlist() {
 	const largerThanSm = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`);
 	const largerThanMd = useMediaQuery(`(min-width: ${theme.breakpoints.md})`);
 	const largerThanLg = useMediaQuery(`(min-width: ${theme.breakpoints.lg})`);
-
-	useEffect(() => {
-		localforage
-			.getItem('watchlist')
-			.then(value => {
-				// This code runs once the value has been loaded
-				// from the offline store.
-				if (value != null) dispatch(setWatchlist(value as showsType));
-			})
-			.catch(err => {
-				// This code runs if there were any errors
-				console.log(err);
-			});
-	}, []);
 
 	const shows = useMemo(
 		() => animes.filter(anime => anime.id in watchlistShows),

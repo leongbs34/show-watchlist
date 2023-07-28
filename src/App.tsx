@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import {
 	ColorScheme,
 	ColorSchemeProvider,
@@ -6,14 +6,15 @@ import {
 	MantineThemeOverride,
 } from '@mantine/core';
 import { useColorScheme } from '@mantine/hooks';
-import Main from './page/main/Main';
 import Root from './page/Root';
 import { store } from './redux/store';
 import { Provider } from 'react-redux';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Watchlist from './page/watchlist/Watchlist';
-import Show from './page/show/Show';
 import ErrorPage from './page/error/ErrorPage';
+
+const Main = lazy(() => import('./page/main/Main'));
+const Watchlist = lazy(() => import('./page/watchlist/Watchlist'));
+const Show = lazy(() => import('./page/show/Show'));
 
 export default function App() {
 	const preferredColorScheme = useColorScheme();
