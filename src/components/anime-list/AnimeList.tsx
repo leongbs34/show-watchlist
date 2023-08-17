@@ -63,7 +63,11 @@ export default function AnimeList() {
 						<Card
 							shadow='md'
 							padding={'xs'}
-							style={{ color: 'inherit', backgroundColor: 'inherit' }}
+							style={{
+								color: 'inherit',
+								backgroundColor: 'inherit',
+								height: '100%',
+							}}
 						>
 							<Card.Section
 								className={classes['card-section']}
